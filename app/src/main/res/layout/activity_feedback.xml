@@ -36,7 +36,10 @@
                 android:id="@+id/textView4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                android:fontFamily="@font/adamina"
+                android:text="@string/feedback"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -48,6 +51,7 @@
                 android:id="@+id/buttonHome1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/adamina"
                 android:text="Back to Home"
                 android:textColor="#3C3A3A"
                 app:strokeColor="#41BEF6"
