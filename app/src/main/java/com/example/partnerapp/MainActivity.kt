@@ -10,10 +10,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val saveButton : Button = findViewById(R.id.buttonSave)
+        val saveButtonn : Button = findViewById(R.id.buttonSave)
         val feedbackButton : Button = findViewById(R.id.buttonFeedback)
 
-        saveButton.setOnClickListener{
+        saveButtonn.setOnClickListener{
 
             val saveIntent = Intent(this, SavedFits::class.java)
 
