@@ -1,13 +1,18 @@
 package com.example.partnerapp
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.media.Image
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.webkit.WebView
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
+import com.android.volley.toolbox.ImageRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 
@@ -20,11 +25,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         val textView = findViewById<TextView>(R.id.header)
-        // ...
+        val imageView = findViewById<ImageView>(R.id.image)
 
-        // Instantiate the RequestQueue.
-        val queue = Volley.newRequestQueue(this)
-        val url = "https://www.nordstrom.com/?utm_content=47251460380&utm_term=kwd-13484996&utm_channel=low_nd_psb_brand&utm_source=google&utm_campaign=932956788&adpos=&creative=573001780769&device=c&matchtype=e&network=g&acctid=21700000001689570&dskeywordid=43700049869797827&lid=43700049869797827&ds_s_kwgid=58700005467362665&locationid=9061201&targetid=kwd-13484996&campaignid=932956788&adgroupid=47251460380&gad_source=1&gclid=CjwKCAjw17qvBhBrEiwA1rU9w9XL5GvabA3zikubgQ2XAqSYZClN7rqx331e78JD4zB3BDNzh6nTkBoCeQYQAvD_BwE&gclsrc=aw.ds"
+        // Get a RequestQueue
+        val queue = MySingleton.getInstance(this.applicationContext).requestQueue
+        val url = "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/store-card-40-vision-pro-202401?wid=800&hei=1000&fmt=p-jpg&qlt=95&.v=1705097770616"
+        val image = MySingleton.getInstance(this.applicationContext).imageLoader
 
         // Request a string response from the provided URL.
         val stringRequest = StringRequest(
@@ -35,9 +41,26 @@ class MainActivity : AppCompatActivity() {
             },
             Response.ErrorListener { textView.text = "That didn't work!" })
 
-        // Add the request to the RequestQueue.
-        queue.add(stringRequest)
+        val max_width = 500
+        val max_height = 500
 
+        val imageRequest = ImageRequest(
+            url,
+            Response.Listener<Bitmap> { response ->
+                // Display the image
+                imageView.setImageBitmap(response)
+            }, max_height, max_width, null, Response.ErrorListener {
+                textView.text = "That didn't work!"
+            }
+        )
+        // Add a request (in this example, called imageRequest) to your RequestQueue.
+        MySingleton.getInstance(this).addToRequestQueue(imageRequest)
+
+        val generateButton : Button = findViewById(R.id.buttonGenerate)
+
+        generateButton.setOnClickListener{
+            queue.add(imageRequest)
+        }
 
         val saveButton : Button = findViewById(R.id.buttonSave)
         val feedbackButton : Button = findViewById(R.id.buttonFeedback)
