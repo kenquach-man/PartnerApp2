@@ -12,6 +12,7 @@ class MainActivity : AppCompatActivity() {
 
         val saveButtonn : Button = findViewById(R.id.buttonSave)
         val feedbackButton : Button = findViewById(R.id.buttonFeedback)
+        val loginButton : Button = findViewById(R.id.buttonLogin)
 
         saveButtonn.setOnClickListener{
 
@@ -26,6 +27,15 @@ class MainActivity : AppCompatActivity() {
 
             startActivity(feedbackIntent)
         }
+
+        loginButton.setOnClickListener{
+
+            val loginIntent = Intent(this, Login::class.java)
+
+            startActivity(loginIntent)
+        }
+
+
     }
 
 
