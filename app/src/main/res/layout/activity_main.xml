@@ -12,21 +12,27 @@
         android:background="#B1EDFF"
         android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/header"
+            android:layout_width="match_parent"
+            android:layout_height="71dp"
+            android:fontFamily="@font/adamina"
+            android:textAlignment="center"
+            android:text="Stylistic"
+            android:background="#41BEF6"
+            android:textSize="20sp"/>
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+             />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#41BEF6"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/adamina"
-                android:text="Stylistic"
-                android:textAlignment="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display3" />
-        </LinearLayout>
+            android:orientation="vertical"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,6 +46,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="212dp"
                 android:layout_height="match_parent" />
+
         </LinearLayout>
 
         <LinearLayout
