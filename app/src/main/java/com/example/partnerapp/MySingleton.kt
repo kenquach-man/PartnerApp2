@@ -8,7 +8,7 @@ import com.android.volley.RequestQueue
 import com.android.volley.toolbox.ImageLoader
 import com.android.volley.toolbox.Volley
 
-class MySingleton constructor(context: Context) {
+class MySingleton(context: Context) {
     companion object {
         @Volatile
         private var INSTANCE: MySingleton? = null

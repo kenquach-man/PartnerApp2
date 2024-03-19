@@ -15,12 +15,12 @@ class ClothingAdapter(
 
     class MyClothingViewHolder(view : View) : RecyclerView.ViewHolder(view) {
         val clothingImage: ImageView = view.findViewById(R.id.clothingImage)
-        val typeName : TextView = view.findViewById(R.id.typeName)
+        val brandName : TextView = view.findViewById(R.id.brandName)
         val storeName : TextView = view.findViewById(R.id.storeName)
         val clothingName : TextView = view.findViewById(R.id.clothingName)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyClothingViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewbrand: Int): MyClothingViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.clothing_cell, parent, false)
         return MyClothingViewHolder(view)
@@ -29,7 +29,7 @@ class ClothingAdapter(
     override fun onBindViewHolder(holder: MyClothingViewHolder, position: Int) {
         val clothing : Clothing = exampleList[position]
         holder.clothingImage.setImageDrawable(clothing.image)
-        holder.typeName.text = clothing.type
+        holder.brandName.text = clothing.brand
         holder.storeName.text = clothing.store
         holder.clothingName.text = clothing.name
 
