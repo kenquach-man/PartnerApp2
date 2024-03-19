@@ -59,7 +59,7 @@
                 android:drawablePadding="20dp"
                 android:fontFamily="@font/adamina"
                 android:hint="Password"
-                android:padding="20dp"
+                android:padding="19dp"
                 android:textColor="@color/white"
                 android:textColorHint="#3C3A3A" />
 
