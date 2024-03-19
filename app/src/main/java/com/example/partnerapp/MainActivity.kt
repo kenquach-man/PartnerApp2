@@ -16,33 +16,32 @@ import com.android.volley.toolbox.JsonObjectRequest
 import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
-
-    //val myWebView: WebView = findViewById(R.id.webview)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val textView = findViewById<TextView>(R.id.header)
-        val imageView = findViewById<ImageView>(R.id.image)
+        val saveButton: Button = findViewById(R.id.buttonSave)
+        val feedbackButton: Button = findViewById(R.id.buttonFeedback)
+        val loginButton: Button = findViewById(R.id.buttonLogin)
 
-        val saveButton : Button = findViewById(R.id.buttonSave)
-        val feedbackButton : Button = findViewById(R.id.buttonFeedback)
-
-        saveButton.setOnClickListener{
+        saveButton.setOnClickListener {
             val saveIntent = Intent(this, SavedFits::class.java)
             startActivity(saveIntent)
         }
 
-        feedbackButton.setOnClickListener{
+        feedbackButton.setOnClickListener {
             val feedbackIntent = Intent(this, Feedback::class.java)
             startActivity(feedbackIntent)
         }
-
+        loginButton.setOnClickListener{
+            val loginIntent = Intent(this, Login::class.java)
+            startActivity(loginIntent)
+        }
         // Get a RequestQueue
         val queue = MySingleton.getInstance(this.applicationContext).requestQueue
         val clothingList = mutableListOf<Clothing>()
-        val url = "https://api.apify.com/v2/datasets/h57KXJrLOEFque3Eo/items?clean=true&format=json&omit=extra"
+        val url =
+            "https://api.apify.com/v2/datasets/h57KXJrLOEFque3Eo/items?clean=true&format=json&omit=extra"
         val jsonArrayRequest = JsonArrayRequest(Request.Method.GET, url, null,
             { response ->
                 // Inside the success callback of the JSON request
@@ -61,7 +60,7 @@ class MainActivity : AppCompatActivity() {
 
                     // Setup RecyclerView after populating clothingList
                     val recyclerView: RecyclerView = findViewById(R.id.recycler)
-                    recyclerView.layoutManager = GridLayoutManager(this,1)
+                    recyclerView.layoutManager = GridLayoutManager(this, 1)
                     recyclerView.adapter = ClothingAdapter(clothingList, this)
                 } catch (e: Exception) {
                     e.printStackTrace()

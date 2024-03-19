@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#B1EDFF"
+    tools:context=".Login">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#41BEF6"
+            android:fontFamily="@font/adamina"
+            android:text="Login"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display3" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="605dp"
+            android:backgroundTint="#2196F3"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/signin"
+                android:layout_margin="10dp"
+                android:background="#6DFFFFFF"
+                android:drawableLeft="@drawable/baseline_person_outline_24"
+                android:drawablePadding="20dp"
+                android:fontFamily="@font/adamina"
+                android:hint="Username"
+                android:padding="20dp"
+                android:textColor="@color/white"
+                android:textColorHint="#3C3A3A" />
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/username"
+                android:layout_margin="10dp"
+                android:background="#6DFFFFFF"
+                android:drawableLeft="@drawable/baseline_info_24"
+                android:drawablePadding="20dp"
+                android:fontFamily="@font/adamina"
+                android:hint="Password"
+                android:padding="19dp"
+                android:textColor="@color/white"
+                android:textColorHint="#3C3A3A" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/loginbtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/password"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="20dp"
+                android:backgroundTint="#41BEF6"
+                android:fontFamily="@font/adamina"
+                android:text="Login"
+                android:textColor="#3C3A3A" />
+
+            <TextView
+                android:id="@+id/forgotpass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/loginbtn"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="10dp"
+                android:backgroundTint="#41BEF6"
+                android:fontFamily="@font/adamina"
+                android:text="Forgot password?"
+                android:textColor="#3C3A3A" />
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/buttonHome2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/adamina"
+                android:text="Back to Home"
+                android:textColor="#3C3A3A"
+                app:strokeColor="#41BEF6"
+                app:strokeWidth="20dp" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

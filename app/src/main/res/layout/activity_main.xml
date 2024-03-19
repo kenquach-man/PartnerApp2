@@ -9,6 +9,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#B1EDFF"
         android:orientation="vertical">
 
         <TextView
@@ -40,23 +41,35 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="36dp"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/buttonGenerate"
-                android:layout_width="match_parent"
+                android:layout_width="208dp"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/adamina"
                 android:text="Generate Fit"
                 android:textColor="#3C3A3A"
                 app:strokeColor="#41BEF6"
                 app:strokeWidth="20dp" />
+
+            <Button
+                android:id="@+id/buttonLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/adamina"
+                android:text="Login"
+                android:textColor="#3C3A3A"
+                app:strokeColor="#41BEF6"
+                app:strokeWidth="20dp" />
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="36dp"
             android:orientation="horizontal">
 
             <Button
@@ -80,6 +93,7 @@
                 android:textColor="#3C3A3A"
                 app:strokeColor="#41BEF6"
                 app:strokeWidth="20dp" />
+
         </LinearLayout>
 
     </LinearLayout>
