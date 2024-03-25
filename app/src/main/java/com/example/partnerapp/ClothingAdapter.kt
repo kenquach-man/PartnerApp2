@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.squareup.picasso.Picasso
 
 class ClothingAdapter(
     val exampleList : List<Clothing>,
@@ -28,7 +29,8 @@ class ClothingAdapter(
 
     override fun onBindViewHolder(holder: MyClothingViewHolder, position: Int) {
         val clothing : Clothing = exampleList[position]
-        holder.clothingImage.setImageDrawable(clothing.image)
+        Picasso.get().load(clothing.imageUrl).into(holder.clothingImage)
+        //holder.clothingImage.setImageDrawable(clothing.image)
         holder.brandName.text = clothing.brand
         holder.storeName.text = clothing.store
         holder.clothingName.text = clothing.name
