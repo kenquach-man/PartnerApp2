@@ -10,4 +10,7 @@ data class Clothing(
     var store: String = "", // Store, piece comes from
     var name: String = "", // Name of the piece
     var imageUrl: String = "",
-    )
+    var type: String = "", // Type of clothing
+    var id: String = "", // Id of clothing
+    ) {
+}

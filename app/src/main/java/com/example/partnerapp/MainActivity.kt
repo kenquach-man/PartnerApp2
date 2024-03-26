@@ -22,6 +22,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.squareup.picasso.Callback
 import org.json.JSONObject
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.processNextEventInCurrentThread
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -50,10 +51,24 @@ class MainActivity : AppCompatActivity() {
             val loginIntent = Intent(this, Login::class.java)
             startActivity(loginIntent)
         }
+
+        // Function to check if an item with a specific ID exists in the list
+        fun List<Clothing>.hasItemId(id: String): Boolean {
+            return any { it.id == id }
+        }
+
+        val clothingList = mutableListOf<Clothing>() // holds list of unique clothes
+        val AccessoryTypes = arrayOf("Beanies")
+        val TopsTypes = arrayOf("Jackets", "Graphics & Tees", "Hoodies", "Button Downs")
+        val BottomsTypes = arrayOf("Shorts", "Cargo & Utility Pants")
+        val ShoeTypes = arrayOf("Sneakers", "Slides")
+        val maleTops = mutableListOf<Clothing>()
+        val malePants = mutableListOf<Clothing>()
+        val maleShoes = mutableListOf<Clothing>()
+        val maleAccessories = mutableListOf<Clothing>()
+
         generateButton.setOnClickListener {
-            // Get a RequestQueue
-            val queue = MySingleton.getInstance(this.applicationContext).requestQueue
-            val clothingList = mutableListOf<Clothing>()
+            val clothingSet = mutableListOf<Clothing>() // Clothing set to be displayed
             val root =
                 "https://api.apify.com/v2/datasets/kL0MfOcXLwdyohWtd/items?clean=true&format=json&limit=1000"
             val jsonArrayRequest = JsonArrayRequest(Request.Method.GET, root, null,
@@ -66,34 +81,46 @@ class MainActivity : AppCompatActivity() {
                                 val name = jsonObject.getString("title")
                                 val brand = jsonObject.getString("brand")
                                 val store = "Reason Clothing"
+                                val type = jsonObject.getString("product_type")
+                                val id = jsonObject.getString("id")
                                 val imageUrl = jsonObject.getJSONArray("images_urls").getString(0)
                                 Log.i("TEST_TAG", imageUrl)
 
-                                /*try {
-                                    val doc: Document = Jsoup.connect(url).get()
-                                    val elements: Elements = doc.getElementsByTag("img").select("LUNts")
-                                    for (element in elements) {
-                                        // Load image using Picasso
-                                        val imageUrl = element.attr("src")
-                                        Log.d("URL_TAG", imageUrl)
-                                    }
-                                } catch (e: Exception) {
-                                    Log.i("ERROR_TAG", "Unable to fetch image: ${e.message}")
-                                    e.printStackTrace()
-                                }*/
-                                val clothing = Clothing(brand, store, name, imageUrl)
+                                val clothing = Clothing(brand, store, name, imageUrl, type, id)
                                 // Now you can use the clothing object or pass it to your adapter
-                                clothingList.add(clothing)
-                                Log.i("INFO_TAG", "Added clothing item: $clothing")
-                                runOnUiThread {
-                                    // Setup RecyclerView after populating clothingList
-                                    val recyclerView: RecyclerView = findViewById(R.id.recycler)
-                                    recyclerView.layoutManager = LinearLayoutManager(this)
-                                    recyclerView.adapter = ClothingAdapter(clothingList, this)
+                                // Only if it isn't already in the clothingList
+                                if(!clothingList.hasItemId(id)) {
+                                    clothingList.add(clothing)
+                                    if(TopsTypes.contains(clothing.type)) {
+                                        maleTops.add(clothing)
+                                    }
+                                    if(BottomsTypes.contains(clothing.type)) {
+                                        malePants.add(clothing)
+                                    }
+                                    if(AccessoryTypes.contains(clothing.type)) {
+                                        maleAccessories.add(clothing)
+                                    }
+                                    if(ShoeTypes.contains(clothing.type)) {
+                                        maleShoes.add(clothing)
+                                    }
                                 }
-                            }
 
+                                Log.i("INFO_TAG", "Added clothing item: $clothing")
+                            }
                             Log.i("INFO_TAG", "Total clothing items: ${clothingList.size}")
+
+                            // Add items to clothing set to be displayed
+                            clothingSet.add(maleTops.random())
+                            clothingSet.add(malePants.random())
+                            clothingSet.add(maleAccessories.random())
+                            clothingSet.add(maleShoes.random())
+
+                            runOnUiThread {
+                                // Setup RecyclerView after populating clothingList
+                                val recyclerView: RecyclerView = findViewById(R.id.recycler)
+                                recyclerView.layoutManager = LinearLayoutManager(this)
+                                recyclerView.adapter = ClothingAdapter(clothingSet, this)
+                            }
 
                         } catch (e: Exception) {
                             e.printStackTrace()
