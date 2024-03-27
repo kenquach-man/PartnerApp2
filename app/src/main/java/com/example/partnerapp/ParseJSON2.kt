@@ -1,12 +1,8 @@
 package com.example.partnerapp
 
-import android.content.Context
 import android.util.Log
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
-import org.json.JSONArray
-import java.io.BufferedReader
-import java.io.InputStreamReader
 
 class ParseJSON2 {
 

@@ -1,10 +1,5 @@
 package com.example.partnerapp
 
-import android.content.res.Resources
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import com.android.volley.Response
-import com.android.volley.toolbox.ImageRequest
 import org.json.JSONArray
 import java.io.BufferedReader
 import java.io.InputStreamReader
