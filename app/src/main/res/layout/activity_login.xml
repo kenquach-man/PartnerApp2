@@ -34,7 +34,7 @@
             android:orientation="vertical">
 
             <EditText
-                android:id="@+id/username"
+                android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/signin"
@@ -43,16 +43,16 @@
                 android:drawableLeft="@drawable/baseline_person_outline_24"
                 android:drawablePadding="20dp"
                 android:fontFamily="@font/adamina"
-                android:hint="Username"
+                android:hint="Email"
                 android:padding="20dp"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textColorHint="#3C3A3A" />
 
             <EditText
                 android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/username"
+                android:layout_below="@+id/email"
                 android:layout_margin="10dp"
                 android:background="#6DFFFFFF"
                 android:drawableLeft="@drawable/baseline_info_24"
@@ -60,7 +60,7 @@
                 android:fontFamily="@font/adamina"
                 android:hint="Password"
                 android:padding="19dp"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textColorHint="#3C3A3A" />
 
             <com.google.android.material.button.MaterialButton
@@ -112,7 +112,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/adamina"
-                android:text="Back to Home"
+                android:text="Continue as Guest"
                 android:textColor="#3C3A3A"
                 app:strokeColor="#41BEF6"
                 app:strokeWidth="20dp" />

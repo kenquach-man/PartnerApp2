@@ -98,12 +98,7 @@ class MainActivity : AppCompatActivity() {
                         clothingSet.add(maleAccessories.random())
                         clothingSet.add(maleShoes.random())
 
-                        runOnUiThread {
-                            // Setup RecyclerView after populating clothingList
-                            val recyclerView: RecyclerView = findViewById(R.id.recycler)
-                            recyclerView.layoutManager = LinearLayoutManager(this)
-                            recyclerView.adapter = ClothingAdapter(clothingSet, this)
-                        }
+                        Log.i("INFO_TAG", "Clothing Set completed")
 
                     } catch (e: Exception) {
                         e.printStackTrace()
@@ -114,22 +109,34 @@ class MainActivity : AppCompatActivity() {
                     Log.i("ERROR_TAG", "Unable to recieve JSON object")
                 }
             )
+            MySingleton.getInstance(this).addToRequestQueue(jsonArrayRequest)
             Log.i("TEST_TAG", clothingList.size.toString())
             // Access the RequestQueue through your singleton class.
-            MySingleton.getInstance(this).addToRequestQueue(jsonArrayRequest)
             return clothingSet
         }
-        var sharedSet: MutableList<Clothing>
+        var sharedSet: MutableList<Clothing> = ArrayList()
 
         generateButton.setOnClickListener {
             sharedSet = generateClothingSet()
             Log.i("TEST_TAG", sharedSet.size.toString())
-            saveButton.setOnClickListener {
-                val saveIntent = Intent(this, SavedFits::class.java)
-                saveIntent.putParcelableArrayListExtra("clothingSet", sharedSet as ArrayList<Clothing>)
-                Log.i("INFO_TAG", "Intent sent")
-            }
-            startActivity(intent)
+            // Setup RecyclerView after populating clothingList
+            val recyclerView: RecyclerView = findViewById(R.id.recycler)
+            recyclerView.layoutManager = LinearLayoutManager(this)
+            recyclerView.adapter = ClothingAdapter(sharedSet, this)
         }
+
+        saveButton.setOnClickListener {
+            // Check if sharedSet is not empty before saving
+            if (sharedSet.isNotEmpty()) {
+                val saveIntent = Intent(this, SavedFits::class.java)
+                saveIntent.putParcelableArrayListExtra("clothingSet", ArrayList(sharedSet))
+                startActivity(saveIntent)
+                Log.i("INFO_TAG", "Intent sent")
+            } else {
+                // Handle the case where sharedSet is empty
+                Log.e("ERROR_TAG", "Shared set is empty. Unable to save.")
+            }
+        }
+
     }
 }

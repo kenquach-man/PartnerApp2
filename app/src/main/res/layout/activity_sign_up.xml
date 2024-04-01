@@ -44,7 +44,7 @@
                 android:fontFamily="@font/adamina"
                 android:hint="Email"
                 android:padding="20dp"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textColorHint="#3C3A3A" />
 
             <EditText
@@ -59,7 +59,7 @@
                 android:fontFamily="@font/adamina"
                 android:hint="Password"
                 android:padding="19dp"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textColorHint="#3C3A3A" />
 
             <EditText
@@ -74,10 +74,10 @@
                 android:fontFamily="@font/adamina"
                 android:hint="Confirm Password"
                 android:padding="19dp"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textColorHint="#3C3A3A" />
 
-            <com.google.android.material.button.MaterialButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/signupbtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -115,7 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/adamina"
-                android:text="Back to Home"
+                android:text="Continue as Guest"
                 android:textColor="#3C3A3A"
                 app:strokeColor="#41BEF6"
                 app:strokeWidth="20dp" />
