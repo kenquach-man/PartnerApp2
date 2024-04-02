@@ -9,28 +9,20 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 class SavedFits : AppCompatActivity() {
-    var savedFits = mutableListOf<Fit>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_saved_fits)
-
+        val savedFits =
+            intent?.getParcelableArrayListExtra<Fit>("savedFits") as MutableList<Fit>
         val homeButton : Button = findViewById(R.id.buttonHome)
 
         homeButton.setOnClickListener{
             val homeIntent = Intent(this, MainActivity::class.java)
+            homeIntent.putParcelableArrayListExtra("savedFits", ArrayList(savedFits))
             startActivity(homeIntent)
         }
 
-        val clothingSet = intent?.getParcelableArrayListExtra<Clothing>("clothingSet") as MutableList<Clothing>
-        if (clothingSet == null) {
-            Log.i("INFO_TAG", "Set is null")
-        } else { // Else if there was a clothing set saved
-            val fit = Fit(savedFits.size, clothingSet)
-            savedFits.add(fit)
-            Log.i("INFO_TAG", "Fit has been added to savedFits")
-            Log.i("INFO_TAG", "Size of savedFits is ${savedFits.size}")
-
-        }
         updateUIWithSavedFits(savedFits)
     }
 

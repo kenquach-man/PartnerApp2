@@ -25,6 +25,7 @@ class SignUp : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
+
         binding.loginredirect.setOnClickListener(){
             val LoginIntent = Intent(this, Login::class.java)
             startActivity(LoginIntent)
