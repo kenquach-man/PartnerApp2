@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
         val maleShoes = mutableListOf<Clothing>()
         val maleAccessories = mutableListOf<Clothing>()
 
-        fun generateClothingSet(): MutableList<Clothing> {
+        fun generateClothingSet(completion: (MutableList<Clothing>) -> Unit) {
             val clothingSet = mutableListOf<Clothing>() // Clothing set to be displayed
             val root =
                 "https://api.apify.com/v2/datasets/kL0MfOcXLwdyohWtd/items?clean=true&format=json&limit=1000"
@@ -99,7 +99,7 @@ class MainActivity : AppCompatActivity() {
                         clothingSet.add(maleShoes.random())
 
                         Log.i("INFO_TAG", "Clothing Set completed")
-
+                        completion(clothingSet)
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -111,18 +111,33 @@ class MainActivity : AppCompatActivity() {
             )
             MySingleton.getInstance(this).addToRequestQueue(jsonArrayRequest)
             Log.i("TEST_TAG", clothingList.size.toString())
-            // Access the RequestQueue through your singleton class.
-            return clothingSet
         }
+
+        fun updateUIWithClothingSet(clothingSet: MutableList<Clothing>) {
+            // Update the UI with the clothing set
+            val recyclerView: RecyclerView = findViewById(R.id.recycler)
+            recyclerView.layoutManager = LinearLayoutManager(this)
+            recyclerView.adapter = ClothingAdapter(clothingSet, this)
+        }
+        // LESSON
+        // SPLIT FUNCTIONS INTO ACTUAL FUNCTIONS, DON'T CREATE ONE MEGA FUNCTION, MAKES YOUR CODE MORE MODULAR
+        // AND EASY TO READ
+        // generateButton and saveButton are Asynchronous calls, that means you can call them at any time
+        // This is problematic as they need a clothingSet to be generated BEFORE, they are called
+        // In order to address this, we can use something called "callbacks", in order to control the "flow" of the code
+        // Callbacks allow us to specify what and when something should happen in a code's execution.
+        // In this case, we used the completion callback, to ensure that the clothingSet was completely generated, BEFORE
+        // being sent to the generateButton and to the saveButton, via sharedSet
+
         var sharedSet: MutableList<Clothing> = ArrayList()
 
         generateButton.setOnClickListener {
-            sharedSet = generateClothingSet()
+            generateClothingSet { clothingSet ->
+                // Call a function to handle the generated clothing set
+                updateUIWithClothingSet(clothingSet)
+                sharedSet = clothingSet
+            }
             Log.i("TEST_TAG", sharedSet.size.toString())
-            // Setup RecyclerView after populating clothingList
-            val recyclerView: RecyclerView = findViewById(R.id.recycler)
-            recyclerView.layoutManager = LinearLayoutManager(this)
-            recyclerView.adapter = ClothingAdapter(sharedSet, this)
         }
 
         saveButton.setOnClickListener {
