@@ -9,12 +9,30 @@ import android.widget.Button
 import android.widget.Toast
 import com.example.partnerapp.databinding.ActivitySignUpBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class SignUp : AppCompatActivity() {
 
     private lateinit var binding: ActivitySignUpBinding
     private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
 
+    //val db = Firebase.firestore
+    var savedFits = mutableListOf<Fit>()
+
+    fun writeNewUser(userId: String, name: String, email: String) {
+        val user = User(name, email)
+        val fitsList = user.fits
+        database.child("users").child(userId).setValue(user)
+        //database.child("users").child(userId).setValue(fitsList)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +43,7 @@ class SignUp : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
+        database = Firebase.database.reference
 
         binding.loginredirect.setOnClickListener(){
             val LoginIntent = Intent(this, Login::class.java)
@@ -32,11 +51,12 @@ class SignUp : AppCompatActivity() {
         }
 
         binding.signupbtn.setOnClickListener{
+            val username = binding.username.text.toString()
             val email = binding.email.text.toString()
             val pass = binding.password.text.toString()
             val confirmPass = binding.confirmation.text.toString()
 
-            if (email.isNotEmpty() && pass.isNotEmpty() && confirmPass.isNotEmpty()){
+            if (username.isNotEmpty() && email.isNotEmpty() && pass.isNotEmpty() && confirmPass.isNotEmpty()){
                 if (pass == confirmPass){
                     auth.createUserWithEmailAndPassword(email, pass)
                         .addOnCompleteListener(this) { task ->
@@ -44,7 +64,33 @@ class SignUp : AppCompatActivity() {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d(TAG, "createUserWithEmail:success")
                                 val user = auth.currentUser
+
+                                user?.let { currentUser ->
+                                    // Create a new user in Firebase Realtime Database
+                                    writeNewUser(currentUser.uid, username, email)
+                                    // Reference the newly created user
+                                    /*val userRef = FirebaseDatabase.getInstance().getReference("users").child(currentUser.uid)
+                                    userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                                            val userData =
+                                                dataSnapshot.getValue(User::class.java)
+                                            userData?.let { user ->
+                                                // Access the newly created user's fits list
+                                                val fitsList = user.fits
+                                                userRef.setValue(user)
+                                                Log.i("INFO_TAG", "Fits list has been sent to newly created user")
+                                                // Now you can use the fitsList as needed
+                                            }
+                                        }
+                                        override fun onCancelled(databaseError: DatabaseError) {
+                                            // Handle errors here
+                                            Log.w(TAG, "loadUser:onCancelled", databaseError.toException())
+                                        }
+                                    })*/
+                                }
+
                                 val LoginIntent = Intent(this, Login::class.java)
+                                LoginIntent.putParcelableArrayListExtra("savedFits", ArrayList(savedFits))
                                 startActivity(LoginIntent)
                             } else {
                                 // If sign in fails, display a message to the user.
@@ -91,4 +137,5 @@ class SignUp : AppCompatActivity() {
 
 
     }
+
 }

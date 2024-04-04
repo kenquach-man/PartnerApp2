@@ -1,5 +1,6 @@
 package com.example.partnerapp
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +10,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.toolbox.JsonArrayRequest
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
@@ -23,6 +32,11 @@ class MainActivity : AppCompatActivity() {
     val maleAccessories = mutableListOf<Clothing>()
     var savedFits = mutableListOf<Fit>()
 
+    private lateinit var auth: FirebaseAuth
+    private lateinit var database: DatabaseReference
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -31,6 +45,11 @@ class MainActivity : AppCompatActivity() {
         val feedbackButton: Button = findViewById(R.id.buttonFeedback)
         val loginButton: Button = findViewById(R.id.buttonLogin)
         val generateButton: Button = findViewById(R.id.buttonGenerate)
+
+        auth = FirebaseAuth.getInstance()
+
+        database = Firebase.database.reference
+
         if (intent.hasExtra("savedFits")) {
             savedFits = intent?.getParcelableArrayListExtra<Fit>("savedFits") as MutableList<Fit>
         }
@@ -83,6 +102,31 @@ class MainActivity : AppCompatActivity() {
                 saveIntent.putParcelableArrayListExtra("savedFits", ArrayList(savedFits))
                 startActivity(saveIntent)
                 Log.i("INFO_TAG", "Intent sent")
+                val user = auth.currentUser
+                user?.let { currentUser ->
+                    // Get current user
+                    val userRef =
+                        FirebaseDatabase.getInstance().getReference("users").child(currentUser.uid)
+                    // Read from the database
+                    userRef.addValueEventListener(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            // This method is called once with the initial value and again
+                            // whenever data at this location is updated.
+                            val userData = dataSnapshot.getValue(User::class.java)
+                            userData?.let { user ->
+                                // Access the newly created user's fits list
+                                val fitsList = user.fits
+                                userRef.setValue(user)
+                                Log.i("INFO_TAG", "Fits list has been sent to newly created user")
+                                // Now you can use the fitsList as needed
+                            }
+                        }
+                        override fun onCancelled(error: DatabaseError) {
+                            // Failed to read value
+                            Log.w(TAG, "Failed to read value.", error.toException())
+                        }
+                    })
+                }
             } else {
                 // Handle the case where sharedSet is empty
                 Log.e("ERROR_TAG", "Shared set is empty. Unable to save.")

@@ -44,7 +44,9 @@
                                     android:id="@+id/clothingImage2"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
-                                    android:scaleType="centerCrop" />
+                                    android:scaleType="centerCrop"
+                                    tools:layout_editor_absoluteX="-65dp"
+                                    tools:layout_editor_absoluteY="4dp" />
 
                                 <TextView
                                     android:id="@+id/brandName2"
