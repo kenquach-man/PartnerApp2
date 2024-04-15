@@ -50,6 +50,8 @@ class MainActivity : AppCompatActivity() {
 
         database = Firebase.database.reference
 
+        val user = auth.currentUser
+
         if (intent.hasExtra("savedFits")) {
             savedFits = intent?.getParcelableArrayListExtra<Fit>("savedFits") as MutableList<Fit>
         }
@@ -102,30 +104,33 @@ class MainActivity : AppCompatActivity() {
                 saveIntent.putParcelableArrayListExtra("savedFits", ArrayList(savedFits))
                 startActivity(saveIntent)
                 Log.i("INFO_TAG", "Intent sent")
-                val user = auth.currentUser
+
                 user?.let { currentUser ->
                     // Get current user
                     val userRef =
-                        FirebaseDatabase.getInstance().getReference("users").child(currentUser.uid)
+                        FirebaseDatabase.getInstance().getReference("users").child(currentUser.uid) // Gets us to root of current user
+                    val savedFitsRef = userRef.child("savedFits")
+                    savedFitsRef.setValue(savedFits)
+
                     // Read from the database
-                    userRef.addValueEventListener(object : ValueEventListener {
+                    /*savedFitsRef.addValueEventListener(object : ValueEventListener {
                         override fun onDataChange(dataSnapshot: DataSnapshot) {
                             // This method is called once with the initial value and again
                             // whenever data at this location is updated.
                             val userData = dataSnapshot.getValue(User::class.java)
-                            userData?.let { user ->
-                                // Access the newly created user's fits list
-                                val fitsList = user.fits
-                                userRef.setValue(user)
-                                Log.i("INFO_TAG", "Fits list has been sent to newly created user")
-                                // Now you can use the fitsList as needed
+                            val fitMap = fit.toMap()
+                            // Generate a unique ID for the fit
+                            val fitId = userRef.child("savedFits").push().key
+                            // Update the fit data under the corresponding fit's child node
+                            if (fitId != null) {
+                                userRef.child("savedFits").child(fitId).setValue(fitMap)
                             }
                         }
                         override fun onCancelled(error: DatabaseError) {
                             // Failed to read value
                             Log.w(TAG, "Failed to read value.", error.toException())
                         }
-                    })
+                    }) */
                 }
             } else {
                 // Handle the case where sharedSet is empty

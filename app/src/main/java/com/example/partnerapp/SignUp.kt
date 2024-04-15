@@ -28,10 +28,17 @@ class SignUp : AppCompatActivity() {
     var savedFits = mutableListOf<Fit>()
 
     fun writeNewUser(userId: String, name: String, email: String) {
-        val user = User(name, email)
-        val fitsList = user.fits
-        database.child("users").child(userId).setValue(user)
-        //database.child("users").child(userId).setValue(fitsList)
+        // Convert fits to a list of maps
+        val fitMaps = savedFits.map { it.toMap() }
+
+        // Create a User object with username, email, and savedFits
+        val user = User(name, email, fitMaps.toMutableList())
+
+        // Convert the User object to a map
+        val userValues = user.toMap()
+
+        // Write the user data to the database
+        database.child("users").child(userId).updateChildren(userValues)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,7 +104,7 @@ class SignUp : AppCompatActivity() {
                                 Log.w(TAG, "createUserWithEmail:failure", task.exception)
                                 Toast.makeText(
                                     baseContext,
-                                    "Authentication failed.",
+                                    "Authentication failed. ${task.exception}",
                                     Toast.LENGTH_SHORT,
                                 ).show()
                                 //updateUI(null)
