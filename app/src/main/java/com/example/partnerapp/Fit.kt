@@ -6,7 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Fit(
-    val id: Int, // Unique identifier for the fit
+    val id: String, // Unique identifier for the fit
     val clothingItems: List<Clothing>
 ) : Parcelable {
     @Exclude

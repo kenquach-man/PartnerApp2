@@ -51,42 +51,52 @@ class Login : AppCompatActivity() {
                             // Get saved fits from user
                             var savedFits = mutableListOf<Fit>()
                             user?.let { currentUser ->
-                                val userRef = FirebaseDatabase.getInstance().getReference().child(
+                                val userRef = FirebaseDatabase.getInstance().getReference("users").child(
                                     currentUser.uid)
                                 val savedFitsRef = userRef.child("savedFits")
                                 savedFitsRef.get().addOnSuccessListener {
                                     Log.i("firebase", "Got value ${it.value}")
-                                    val id = 0
+                                    var id = 0
                                     for (fit in it.children) {
-                                        val clothingItems = fit.getValue<List<Clothing>>()
-                                        val fit = clothingItems?.let { it1 -> Fit(id, it1) }
+                                        val clothingItems = fit.child("clothingItems")
+                                        val clothingItemsList = ArrayList<Clothing>()
+                                        for (i in clothingItems.children) {
+                                            val clothingItemMap = i.getValue<HashMap<String, Any>>()
+                                            if (clothingItemMap != null) {
+                                                val clothingItem = Clothing()
+                                                for (key in clothingItemMap.keys) {
+                                                    val value = clothingItemMap[key]
+                                                    Log.i("INFO_TAG", "Preparing to find key-value pair")
+                                                    when (key) {
+                                                        "brand" -> clothingItem.brand = value.toString()
+                                                        "id" -> clothingItem.id = value.toString()
+                                                        "imageUrl" -> clothingItem.imageUrl = value.toString()
+                                                        "name" -> clothingItem.name = value.toString()
+                                                        "store" -> clothingItem.store = value.toString()
+                                                        "type" -> clothingItem.type = value.toString()
+                                                        "stability" -> if (value != null) {
+                                                            clothingItem.stability = value.toString().toLong()
+                                                        }
+                                                    }
+                                                }
+                                                clothingItemsList.add(clothingItem)
+                                                Log.i("INFO_TAG", "Size of clothingItemsList is ${clothingItemsList.size}")
+                                            }
+                                        }
+                                        val fit = Fit(id.toString(), clothingItemsList)
                                         if (fit != null) {
                                             Log.i("TEST_TAG", "Added fit to savedFits for Login")
+                                            Log.i("INFO_TAG", "Size of savedFits is ${savedFits.size}")
                                             savedFits.add(fit)
+                                            id++
                                         }
-                                        /*var clothingItems = mutableListOf<Clothing>()
-                                        val clothingItemsNode = fit.child("clothingItems")
-                                        val clothingItem = Clothing()
-                                        for (i in clothingItemsNode.children) {
-                                            val values = i.values
-                                            for (key in values.keys) {
-                                                val value = values[key]
-                                                when (key) {
-                                                    "brand" -> clothingItem.brand = value
-                                                    "id" -> clothingItem.id = value
-                                                    "imageUrl" -> clothingItem.imageUrl = value
-                                                    "name" -> clothingItem.name = value
-                                                    "store" -> clothingItem.store = value
-                                                    "type" -> clothingItem.type = value
-                                                }
-                                            }
-                                        }*/
                                     }
                                 }.addOnFailureListener{
                                     Log.e("firebase", "Error getting data", it)
                                 }
                             }
                             val HomeIntent = Intent(this, MainActivity::class.java)
+                            HomeIntent.putExtra("savedFits", ArrayList(savedFits))
                             startActivity(HomeIntent)
                         } else {
                             // If sign in fails, display a message to the user.

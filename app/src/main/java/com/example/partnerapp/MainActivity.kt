@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity() {
 
         if (intent.hasExtra("savedFits")) {
             savedFits = intent?.getParcelableArrayListExtra<Fit>("savedFits") as MutableList<Fit>
+            Log.i("INFO_TAG", "Size of savedFits is ${savedFits.size}")
         }
         savedFitsButton.setOnClickListener {
             val saveIntent = Intent(this, SavedFits::class.java)
@@ -95,7 +96,7 @@ class MainActivity : AppCompatActivity() {
         saveButton.setOnClickListener {
             // Check if sharedSet is not empty before saving
             if (sharedSet.isNotEmpty()) {
-                val fit = Fit(savedFits.size, sharedSet)
+                val fit = Fit(savedFits.size.toString(), sharedSet)
                 savedFits.add(fit)
                 Log.i("INFO_TAG", "Fit has been added to savedFits")
                 Log.i("INFO_TAG", "Size of savedFits is ${savedFits.size}")
