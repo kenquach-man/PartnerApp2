@@ -13,7 +13,7 @@ data class Clothing(
     var imageUrl: String? = "",
     var type: String? = "", // Type of clothing
     var id: String? = "", // Id of clothing
-    var stability: Long = 0 // Stability of clothing item
+    //var stability: Long = 0 // Stability of clothing item
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
@@ -22,7 +22,7 @@ data class Clothing(
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
-        parcel.readLong()
+        //parcel.readLong()
     ) {
     }
 
@@ -35,7 +35,7 @@ data class Clothing(
             parcel.writeString(imageUrl)
             parcel.writeString(type)
             parcel.writeString(id)
-            parcel.writeLong(stability)
+            //parcel.writeLong(stability)
         }
 
         override fun create(parcel: Parcel): Clothing {

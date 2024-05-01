@@ -20,7 +20,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
-
+    private var savedFits = mutableListOf<Fit>()
     val clothingList = mutableListOf<Clothing>() // holds list of unique clothes
     val AccessoryTypes = arrayOf("Beanies")
     val TopsTypes = arrayOf("Jackets", "Graphics & Tees", "Hoodies", "Button Downs")
@@ -30,12 +30,20 @@ class MainActivity : AppCompatActivity() {
     val malePants = mutableListOf<Clothing>()
     val maleShoes = mutableListOf<Clothing>()
     val maleAccessories = mutableListOf<Clothing>()
-    var savedFits = mutableListOf<Fit>()
+    //var savedFits = mutableListOf<Fit>()
 
     private lateinit var auth: FirebaseAuth
     private lateinit var database: DatabaseReference
 
-
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent?.action == "com.example.partnerapp.ACTION_SEND_SAVED_FITS") {
+            if (intent.hasExtra("savedFits")) {
+                savedFits = intent.getParcelableArrayListExtra<Fit>("savedFits") as MutableList<Fit>
+                Log.i("INFO_TAG", "Size of received savedFits is ${savedFits.size}")
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,10 +60,16 @@ class MainActivity : AppCompatActivity() {
 
         val user = auth.currentUser
 
-        if (intent.hasExtra("savedFits")) {
+        /*if (intent.hasExtra("savedFits")) {
             savedFits = intent?.getParcelableArrayListExtra<Fit>("savedFits") as MutableList<Fit>
             Log.i("INFO_TAG", "Size of savedFits is ${savedFits.size}")
+        }*/
+
+        if (intent.hasExtra("savedFits")) {
+            savedFits = intent.getParcelableArrayListExtra<Fit>("savedFits") as MutableList<Fit>
+            Log.i("INFO_TAG", "Size of received savedFits is ${savedFits.size}")
         }
+
         savedFitsButton.setOnClickListener {
             val saveIntent = Intent(this, SavedFits::class.java)
             saveIntent.putParcelableArrayListExtra("savedFits", ArrayList(savedFits))

@@ -21,6 +21,7 @@ class Login : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
     private lateinit var auth: FirebaseAuth
+    var savedFits = mutableListOf<Fit>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,9 +48,8 @@ class Login : AppCompatActivity() {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(ContentValues.TAG, "createUserWithEmail:success")
                             val user = auth.currentUser
-                            //updateUI(user)
+
                             // Get saved fits from user
-                            var savedFits = mutableListOf<Fit>()
                             user?.let { currentUser ->
                                 val userRef = FirebaseDatabase.getInstance().getReference("users").child(
                                     currentUser.uid)
@@ -74,9 +74,9 @@ class Login : AppCompatActivity() {
                                                         "name" -> clothingItem.name = value.toString()
                                                         "store" -> clothingItem.store = value.toString()
                                                         "type" -> clothingItem.type = value.toString()
-                                                        "stability" -> if (value != null) {
-                                                            clothingItem.stability = value.toString().toLong()
-                                                        }
+                                                        //"stability" -> if (value != null) {
+                                                        //    clothingItem.stability = value.toString().toLong()
+                                                        //}
                                                     }
                                                 }
                                                 clothingItemsList.add(clothingItem)
@@ -85,19 +85,21 @@ class Login : AppCompatActivity() {
                                         }
                                         val fit = Fit(id.toString(), clothingItemsList)
                                         if (fit != null) {
-                                            Log.i("TEST_TAG", "Added fit to savedFits for Login")
-                                            Log.i("INFO_TAG", "Size of savedFits is ${savedFits.size}")
                                             savedFits.add(fit)
                                             id++
+                                            Log.i("TEST_TAG", "Added fit to savedFits for Login")
+                                            Log.i("INFO_TAG", "Size of savedFits is ${savedFits.size}")
                                         }
                                     }
+                                    val HomeIntent = Intent(this, MainActivity::class.java)
+                                    HomeIntent.action = "com.example.partnerapp.ACTION_SEND_SAVED_FITS"
+                                    HomeIntent.putParcelableArrayListExtra("savedFits", ArrayList(savedFits))
+                                    Log.i("INFO_TAG", "Sending savedFits to Homepage")
+                                    startActivity(HomeIntent)
                                 }.addOnFailureListener{
                                     Log.e("firebase", "Error getting data", it)
                                 }
                             }
-                            val HomeIntent = Intent(this, MainActivity::class.java)
-                            HomeIntent.putExtra("savedFits", ArrayList(savedFits))
-                            startActivity(HomeIntent)
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(ContentValues.TAG, "createUserWithEmail:failure", task.exception)
@@ -106,7 +108,6 @@ class Login : AppCompatActivity() {
                                 "Authentication failed.",
                                 Toast.LENGTH_SHORT,
                             ).show()
-                            //updateUI(null)
                         }
                     }
             }else{
@@ -120,8 +121,6 @@ class Login : AppCompatActivity() {
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(ContentValues.TAG, "signInAnonymously:success")
-                        //val user = auth.currentUser
-                        //updateUI(user)
                         val homeIntent = Intent(this, MainActivity::class.java)
                         startActivity(homeIntent)
                     } else {
@@ -132,7 +131,6 @@ class Login : AppCompatActivity() {
                             "Authentication failed.",
                             Toast.LENGTH_SHORT,
                         ).show()
-                        //updateUI(null)
                     }
                 }
         }

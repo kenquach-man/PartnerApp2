@@ -1,17 +1,28 @@
 package com.example.partnerapp
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 
+private lateinit var auth: FirebaseAuth
+private lateinit var database: DatabaseReference
 class FitsAdapter(
-    val fits: List<Fit>,
+    val fits: MutableList<Fit>,
     val context: Context
+
 ) : RecyclerView.Adapter<FitsAdapter.MyFitViewHolder>() {
 
     class MyFitViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -33,6 +44,7 @@ class FitsAdapter(
         val brandNameShoe : TextView = view.findViewById(R.id.brandName4)
         val storeNameShoe : TextView = view.findViewById(R.id.storeName4)
         val clothingNameShoe : TextView = view.findViewById(R.id.clothingName4)
+        val deleteButton: ImageButton = view.findViewById(R.id.delete)
     }
     
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyFitViewHolder {
@@ -74,6 +86,43 @@ class FitsAdapter(
         holder.brandNameShoe.text = fit.clothingItems[3].brand
         holder.storeNameShoe.text = fit.clothingItems[3].store
         holder.clothingNameShoe.text = fit.clothingItems[3].name
+
+        holder.deleteButton.setOnClickListener {
+            // Handle click event
+            // You can use position to get the position of the item clicked
+            auth = FirebaseAuth.getInstance()
+            database = Firebase.database.reference
+            val position = holder.adapterPosition
+
+            // Ensure the position is valid
+            if (position != RecyclerView.NO_POSITION) {
+                val fitToRemove = fits[position] // Get the fit to remove from the list
+
+                // Get the current user
+                val user = auth.currentUser
+
+                user?.let { currentUser ->
+                    // Get reference to the savedFits node for the current user
+                    val userRef =
+                        FirebaseDatabase.getInstance().getReference("users").child(currentUser.uid)
+                    val savedFitsRef = userRef.child("savedFits")
+
+                    // Find the child node with the fit's ID and remove it
+                    val fitIdToRemove = fitToRemove.id
+                    savedFitsRef.child(fitIdToRemove).removeValue()
+                        .addOnSuccessListener {
+                            // Remove the fit from the local list as well
+                            fits.removeAt(position)
+                            notifyItemRemoved(position)
+                            notifyItemRangeChanged(position, fits.size)
+                            Log.d("TAG", "Fit removed successfully")
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.e("TAG", "Error removing fit", exception)
+                        }
+                }
+            }
+        }
     }
 
     override fun getItemCount(): Int {
